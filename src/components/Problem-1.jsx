@@ -4,6 +4,35 @@ const Problem1 = () => {
   const [tasks, setTasks] = useState([]);
   const [show, setShow] = useState("all");
 
+  const displayTasks =
+    show === "all"
+      ? tasks.sort((a, b) => {
+          if (
+            a.status.toLowerCase() === "active" &&
+            b.status.toLowerCase() !== "active"
+          ) {
+            return -1;
+          } else if (
+            a.status.toLowerCase() !== "active" &&
+            b.status.toLowerCase() === "active"
+          ) {
+            return 1;
+          } else if (
+            a.status.toLowerCase() === "completed" &&
+            b.status.toLowerCase() !== "completed"
+          ) {
+            return -1;
+          } else if (
+            a.status.toLowerCase() !== "completed" &&
+            b.status.toLowerCase() === "completed"
+          ) {
+            return 1;
+          } else {
+            return a.name.localeCompare(b.name);
+          }
+        })
+      : tasks.filter((task) => task.status.toLowerCase() === show);
+
   const handleClick = (val) => {
     setShow(val);
   };
@@ -15,7 +44,6 @@ const Problem1 = () => {
       status: e.target[1].value,
     };
     setTasks([...tasks, data]);
-    console.log(tasks);
     e.target.reset();
   };
 
@@ -84,7 +112,7 @@ const Problem1 = () => {
               </tr>
             </thead>
             <tbody>
-              {tasks.map((task, idx) => (
+              {displayTasks.map((task, idx) => (
                 <tr key={idx}>
                   <td>{task.name}</td>
                   <td>{task.status}</td>
